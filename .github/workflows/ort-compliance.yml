@@ -24,6 +24,20 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      # Fix 1: Set up Python so the environment can parse pyproject.toml
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      # Fix 2: Create a virtual environment and generate lock data for ORT to find
+      - name: Install Python Dependencies & Generate Lockfile
+        run: |
+          python -m pip install --upgrade pip setuptools wheel pip-tools
+          # Compiles pyproject.toml dependencies into a standard requirements.txt lock matrix
+          pip-compile pyproject.toml -o requirements.txt
+
       # Run ORT via container or CLI action to analyze, scan, advise, and evaluate
       - name: Run OSS Review Toolkit
         id: ort
