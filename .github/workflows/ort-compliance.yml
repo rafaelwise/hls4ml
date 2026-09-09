@@ -26,17 +26,13 @@ jobs:
 
       # Run ORT via container or CLI action to analyze, scan, advise, and evaluate
       - name: Run OSS Review Toolkit
+        id: ort
         uses: oss-review-toolkit/ort-ci-github-action@main
         with:
+          project-path: '.'
           # Optional: Configure arguments to run analyzer, scanner, advisor (vulnerabilities), and evaluator
           #ort-arguments: '--info analyze --info scan --info advise --info evaluate --info report -f CycloneDX -f SpdxDocumentJson'
           run: 'analyze,scan,advise,evaluate,report'
           report-formats: 'CycloneDX,SpdxDocumentJson,HtmlTemplate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload ORT Result & SBOM Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: ort-reports
-          path: ${{ steps.ort.outputs.results-path || '/home/runner/work/_temp/ort/results' }}
