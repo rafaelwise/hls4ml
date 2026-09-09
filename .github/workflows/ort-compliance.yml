@@ -29,7 +29,9 @@ jobs:
         uses: oss-review-toolkit/ort-ci-github-action@main
         with:
           # Optional: Configure arguments to run analyzer, scanner, advisor (vulnerabilities), and evaluator
-          ort-arguments: '--info analyze --info scan --info advise --info evaluate --info report -f CycloneDX -f SpdxDocumentJson'
+          #ort-arguments: '--info analyze --info scan --info advise --info evaluate --info report -f CycloneDX -f SpdxDocumentJson'
+          run: 'analyze,scan,advise,evaluate,report'
+          report-formats: 'CycloneDX,SpdxDocumentJson,HtmlTemplate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -38,8 +40,8 @@ jobs:
         with:
           name: ort-reports
           path: |
-            **/ort-results/evaluator-result.yml
-            **/ort-results/advisor-result.yml
-            **/ort-results/*.html
-            **/ort-results/cyclonedx*.json
-            **/ort-results/spdx*.json
+            ort-results/evaluator-result.yml
+            ort-results/advisor-result.yml
+            ort-results/scan-report.html
+            ort-results/cyclonedx*.json
+            ort-results/spdx*.json
