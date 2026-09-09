@@ -50,3 +50,14 @@ jobs:
           report-formats: 'CycloneDX,SpdxDocumentJson,HtmlTemplate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Fix 4: Capture the reports out of the workspace using global wildcards
+      - name: Upload ORT Result & SBOM Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: compliance-and-sbom-reports
+          path: |
+            **/ort-results/*
+            **/*result*.yml
+            **/*report*.html
+            **/*.bom.json
