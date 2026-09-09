@@ -51,13 +51,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # FIX 1: Copy files from the absolute paths into a workspace-relative directory
+      - name: Stage Reports for Upload
+        run: |
+          mkdir -p ${{ github.workspace }}/exported-ort-reports
+
+          # Copy files from the global home path if they exist
+          if [ -d "/home/runner/.ort/ort-results" ]; then
+            cp -r /home/runner/.ort/ort-results/* ${{ github.workspace }}/exported-ort-reports/ || true
+          fi
+
+          # Copy the HTML report from its specific path if it exists
+          if [ -f "/ort-results/scan-report.html" ]; then
+            cp /ort-results/scan-report.html ${{ github.workspace }}/exported-ort-reports/ || true
+          fi
+
+          echo "=== Verified Exported Files inside Workspace ==="
+          ls -la ${{ github.workspace }}/exported-ort-reports/
+
       # Fix 4: Capture the reports out of the workspace using global wildcards
       - name: Upload ORT Result & SBOM Reports
         uses: actions/upload-artifact@v4
         with:
           name: compliance-and-sbom-reports
-          path: |
-            **/ort-results/*
-            **/*result*.yml
-            **/*report*.html
-            **/*.bom.json
+          path: ${{ github.workspace }}/exported-ort-reports/
