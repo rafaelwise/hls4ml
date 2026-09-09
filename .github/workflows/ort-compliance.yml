@@ -39,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ort-reports
-          path: ${{ steps.ort.outputs.results-path }}
+          path: ${{ steps.ort.outputs.results-path || '/home/runner/work/_temp/ort/results' }}
