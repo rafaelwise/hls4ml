@@ -39,9 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ort-reports
-          path: |
-            ort-results/evaluator-result.yml
-            ort-results/advisor-result.yml
-            ort-results/scan-report.html
-            ort-results/cyclonedx*.json
-            ort-results/spdx*.json
+          path: ${{ steps.ort.outputs.results-path }}
