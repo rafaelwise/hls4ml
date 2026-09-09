@@ -1,0 +1,45 @@
+name: OSS Review Toolkit Compliance Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Allows you to manually trigger this workflow from the Actions tab    
+
+jobs:
+  ort-scan:
+    name: Run ORT Analysis, Scanner, Advisor, and Evaluator
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Setup Java/Node/Dotnet/etc. depending on your project type 
+      # so the ORT Analyzer can successfully resolve dependencies.
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # Run ORT via container or CLI action to analyze, scan, advise, and evaluate
+      - name: Run OSS Review Toolkit
+        uses: oss-review-toolkit/ort-ci-github-action@main
+        with:
+          # Optional: Configure arguments to run analyzer, scanner, advisor (vulnerabilities), and evaluator
+          ort-arguments: '--info analyze --info scan --info advise --info evaluate --info report -f CycloneDX -f SpdxDocumentJson'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ORT Result & SBOM Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ort-reports
+          path: |
+            **/ort-results/evaluator-result.yml
+            **/ort-results/advisor-result.yml
+            **/ort-results/*.html
+            **/ort-results/cyclonedx*.json
+            **/ort-results/spdx*.json
