@@ -46,7 +46,7 @@ jobs:
           project-path: '.'
           # Optional: Configure arguments to run analyzer, scanner, advisor (vulnerabilities), and evaluator
           #ort-arguments: '--info analyze --info scan --info advise --info evaluate --info report -f CycloneDX -f SpdxDocumentJson'
-          run: 'analyze,scan,advise,evaluate,report'
+          run: 'analyze,scan,advise,evaluate,report,upload-results,upload-evaluation-result'
           report-formats: 'CycloneDX,SpdxDocumentJson,HtmlTemplate'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
